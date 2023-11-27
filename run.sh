@@ -1,6 +1,11 @@
 ./gradlew bootJar
 
-wget -O dd-java-agent.jar https://dtdg.co/latest-java-tracer
+if [ ! -f dd-java-agent.jar ]; then
+	echo "Downloading dd-java-agent"
+	wget -O dd-java-agent.jar https://dtdg.co/latest-java-tracer
+else
+	echo "Skipping dd-java-agent download"
+fi
 
 java -javaagent:dd-java-agent.jar \
 	-Ddd.logs.injection=true \
