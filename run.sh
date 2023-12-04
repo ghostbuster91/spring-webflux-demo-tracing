@@ -12,6 +12,7 @@ java -javaagent:dd-java-agent.jar \
 	-Ddd.service=http-example \
 	-Ddd.env=test \
 	-Ddd.trace.enabled=true \
+	-Ddd.trace.otel.enabled=true \
 	-Ddd.trace.annotation.async=true \
 	-Ddd.trace.propagation.style="b3multi" \
 	-jar build/libs/*.jar

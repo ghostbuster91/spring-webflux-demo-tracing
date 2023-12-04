@@ -1,6 +1,6 @@
 package org.example;
 
-import datadog.trace.api.Trace;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,7 @@ public class DemoController {
         return getJust();
     }
 
-    @Trace(operationName = "get-test", resourceName = "DemoController")
+    @WithSpan(value = "getJust")
     public Mono<ResponseEntity<String>> getJust() {
         return Mono.just(ResponseEntity.ok("Dummy response")).delayElement(Duration.of(1, ChronoUnit.SECONDS));
     }
