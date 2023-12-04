@@ -19,35 +19,6 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class Main {
 
-    @Bean
-    public OpenTelemetry create() {
-        Resource resource = Resource.getDefault().toBuilder().build();
-        SdkTracerProvider sdkTracerProvider =
-                SdkTracerProvider.builder()
-                        .addSpanProcessor(SimpleSpanProcessor.create(LoggingSpanExporter.create()))
-                        .setResource(resource)
-                        .build();
-
-        SdkMeterProvider sdkMeterProvider =
-                SdkMeterProvider.builder()
-                        .registerMetricReader(
-                                PeriodicMetricReader.builder(LoggingMetricExporter.create()).build())
-                        .setResource(resource)
-                        .build();
-
-        SdkLoggerProvider sdkLoggerProvider =
-                SdkLoggerProvider.builder()
-                        .addLogRecordProcessor(
-                                BatchLogRecordProcessor.builder(SystemOutLogRecordExporter.create()).build())
-                        .setResource(resource)
-                        .build();
-
-        return OpenTelemetrySdk.builder()
-                .setTracerProvider(sdkTracerProvider)
-                .setMeterProvider(sdkMeterProvider)
-                .setLoggerProvider(sdkLoggerProvider)
-                .buildAndRegisterGlobal();
-    }
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }

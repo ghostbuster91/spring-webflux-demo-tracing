@@ -1,18 +1,14 @@
 ./gradlew bootJar
 
-if [ ! -f dd-java-agent.jar ]; then
+if [ ! -f opentelemetry-javaagent.jar ]; then
 	echo "Downloading dd-java-agent"
-	wget -O dd-java-agent.jar https://dtdg.co/latest-java-tracer
+	wget -O opentelemetry-javaagent.jar https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
 else
 	echo "Skipping dd-java-agent download"
 fi
 
-java -javaagent:dd-java-agent.jar \
-	-Ddd.logs.injection=true \
-	-Ddd.service=http-example \
-	-Ddd.env=test \
-	-Ddd.trace.enabled=true \
-	-Ddd.trace.otel.enabled=true \
-	-Ddd.trace.annotation.async=true \
-	-Ddd.trace.propagation.style="b3multi" \
+env OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317 java -javaagent:opentelemetry-javaagent.jar \
+  -Dotel.service.name="http-example" \
+  -Dotel.resource.attributes="env=test" \
+  -Dotel.propagators="b3multi" \
 	-jar build/libs/*.jar
